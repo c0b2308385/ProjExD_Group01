@@ -5,6 +5,45 @@ import sys
 import pygame as pg
 import math
 
+
+def start_screen(screen):
+    # スクリーンのサイズをメイン画面と統一
+    screen = pg.display.set_mode((WIDTH, HEIGHT))
+
+    # 画面の背景色
+    screen.fill((0, 0, 0))  # 黒色
+
+    # 日本語フォントの指定
+    font_path = "meiryo.ttc"  # Windowsの「メイリオ」フォントを使用
+    if os.path.exists(font_path):  # フォントファイルが存在するか確認
+        title_font = pg.font.Font(font_path, 100)  # 日本語対応フォント（サイズ100）
+        button_font = pg.font.Font(font_path, 60)  # STARTボタン用フォント（サイズ60）
+    else:
+        title_font = pg.font.SysFont("msgothic", 100)  # フォントがない場合はデフォルトフォント
+        button_font = pg.font.SysFont("msgothic", 60)
+
+    # タイトルテキスト
+    title_text = title_font.render("コウカトンテイル", True, (255, 0, 0))  # オレンジ色の文字
+    title_rect = title_text.get_rect(center=(WIDTH // 2, HEIGHT // 3))
+    screen.blit(title_text, title_rect)
+
+    # STARTボタンテキスト
+    button_text = button_font.render("スタート", True, (255, 0, 0))  # 白い文字
+    button_rect = button_text.get_rect(center=(WIDTH // 2, HEIGHT * 2 // 3))
+    screen.blit(button_text, button_rect)
+
+    pg.display.update()
+    
+    # STARTボタンが押されるまで待機
+    while True:
+        for event in pg.event.get():
+            if event.type == pg.QUIT:
+                pg.quit()
+                sys.exit()
+            if event.type == pg.KEYDOWN and event.key == pg.K_RETURN:  # Enterキーでゲーム開始
+                return  # メイン画面に進む
+            
+
 WIDTH, HEIGHT = 1100, 650
 DELTA = {
     pg.K_UP: (0,-7),
@@ -252,6 +291,8 @@ def main():
 
 if __name__ == "__main__":
     pg.init()
+    screen = pg.display.set_mode((WIDTH, HEIGHT))  # 画面の設定を統一
+    start_screen(screen)  # スタート画面の呼び出し
     main()
     pg.quit()
     sys.exit()
